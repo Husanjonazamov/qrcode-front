@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 
 
 
-const FileUpload = () => {
+const FileUpload = ({ onFileSelect }) => {
 
     const fileInputRef = useRef(null);
     const [fileName, setFileName] = useState("");
@@ -11,6 +11,7 @@ const FileUpload = () => {
         const file = e.target.files[0];
         if (file) {
             setFileName(file.name);
+            onFileSelect(file);
         }
     };
 
