@@ -1,75 +1,79 @@
-import { React, useState, useEffect } from "react";
-import SideBar from "./components/Sidebar/Sidebar";
-import MainContent from "./components/Main/Main"
-import Cards from "./components/Cards/Cards";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import React from "react";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  Outlet,
+  useLocation,
+} from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+
 import LoginPage from "./components/Login/Login";
 import Dashboard from "./components/Dashboard/Dashboard";
+import Cards from "./components/Cards/Cards";
 import PdfPage from "./components/PdfPage/PdfPage";
 
 
+
+
+const isTokenValid = (token) => {
+  try {
+    const decoded = jwtDecode(token);
+    const now = Date.now() / 1000;
+    return decoded.exp > now;
+  } catch (err) {
+    return false;
+  }
+};
+
+function ProtectedRoute() {
+  const token = localStorage.getItem("access");
+  return token && isTokenValid(token) ? <Outlet /> : <Navigate to="/" replace />;
+}
+
+function RedirectIfAuthenticated({ children }) {
+  const token = localStorage.getItem("access");
+  const location = useLocation();
+
+  if (token && isTokenValid(token)) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return children;
+}
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<LoginPage />} />
+        <Route
+          path="/"
+          element={
+            <RedirectIfAuthenticated>
+              <LoginPage />
+            </RedirectIfAuthenticated>
+          }
+        />
 
-        <Route path="/dashboard" element={<Dashboard />}>
-          <Route
-            index
-            element={
-              <div className="w-full">
-                <div className="">
+        <Route path="/dashboard" element={<ProtectedRoute />}>
+          <Route element={<Dashboard />}>
+            <Route
+              index
+              element={
+                <div className="w-full">
                   <Cards />
                 </div>
-              </div>
-            }
-          />
-
-          <Route path="pdf" element={<PdfPage />} />
+              }
+            />
+            <Route path="pdf" element={<PdfPage />} />
+          </Route>
         </Route>
+
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
   );
 }
 
 export default App;
-
-
-
-
-
-
-
-// // App.jsx
-
-// import LoginPage from "./components/Login";
-// import Dashboard from "./components/Dashboard";
-// import Navbar from "./components/Navbar";
-
-// function AppContent() {
-//   const location = useLocation();
-//   const hideNavbarOn = ['/']
-//   return (
-//     <>
-//       {!hideNavbarOn.includes(location.pathname) && <Navbar />}
-//       <Routes>
-//         <Route path="/" element={<LoginPage />} />
-//         <Route path="/dashboard" element={<Dashboard />} />
-//       </Routes>
-//     </>
-//   );
-// }
-
-
-// function App() {
-//   return (
-//     <BrowserRouter>
-//       <AppContent />
-//     </BrowserRouter>
-//   );
-// }
-
-
-// export default App;

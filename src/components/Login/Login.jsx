@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { FaFingerprint, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { MdPhone } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import loginUser from "../Auth/Auth"; 
+
+
 
 const LoginPage = () => {
   const [phone, setPhone] = useState("+998 ");
@@ -38,19 +41,13 @@ const LoginPage = () => {
     setPhone(formatted);
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-
-    const cleanedPhone = phone.replace(/\D/g, ""); 
-    if (!cleanedPhone || !password) {
-      setError("Iltimos, barcha maydonlarni to'ldiring!");
-      return;
-    }
-
-    if (cleanedPhone === "998940014741" && password === "2309") {
-      navigate("/dashboard"); 
-    } else {
-      setError("Telefon raqam yoki parol noto'g'ri!");
+    try {
+      await loginUser(phone, password); 
+      navigate("/dashboard");
+    } catch (err) {
+      setError(err.message);
     }
   };
 
@@ -67,7 +64,6 @@ const LoginPage = () => {
         )}
 
         <form onSubmit={handleLogin} className="w-full flex flex-col gap-4">
-          {/* Phone input */}
           <div className="w-full flex items-center bg-gray-200 p-3 rounded-xl gap-2">
             <MdPhone className="text-zinc-700 text-lg" />
             <input
@@ -79,7 +75,6 @@ const LoginPage = () => {
             />
           </div>
 
-          {/* Password input */}
           <div className="w-full flex items-center bg-gray-200 p-3 rounded-xl gap-2 relative">
             <FaFingerprint className="text-zinc-700 text-lg" />
             <input

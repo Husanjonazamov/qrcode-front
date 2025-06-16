@@ -28,14 +28,17 @@ const Header = () => {
         </div>
 
         {showDropdown && (
-          <div className="absolute right-0 mt-2 w-32 bg-white border rounded-md shadow-lg">
+          <div className="absolute right-0 mt-20 w-48 bg-white text-[#EF4444] rounded-md shadow-2xl z-50 overflow-hidden animate-dropdown">
+
             <button
               onClick={handleLogout}
-              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-500/10 hover:text-red-400 transition-colors duration-150 "
             >
-              Logout
+              Log out
             </button>
           </div>
+
+
         )}
       </div>
     </div>
