@@ -30,7 +30,6 @@ const PdfPage = () => {
             <p className="text-gray-600 text-lg leading-relaxed">
                 Bu sahifada PDF fayllarni yuklab qo'shishingiz, tahrirlashingiz va boshqarishingiz mumkin.
             </p>
-
             <PdfList items={pdfItems} setItems={setPdfItems} />
 
             <PdfModel isOpen={isOpen} onClose={() => setIsOpen(false)} addPdfItem={addPdfItem} />
