@@ -104,7 +104,7 @@ const LoginPage = () => {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 transition text-white font-medium py-2 rounded-xl text-sm md:text-base"
+            className="w-full bg-teal-700 hover:bg-teal-800 transition text-white font-medium py-2 rounded-xl text-sm md:text-base"
           >
             Login
           </button>
