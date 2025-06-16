@@ -5,7 +5,6 @@ import Header from "../Header/Header";
 import { Outlet } from "react-router-dom";
 
 const Dashboard = () => {
-  const [darkMode, setDarkMode] = useState(true);
   const [isOpen, setIsOpen] = useState(true);
 
   useEffect(() => {
@@ -14,26 +13,18 @@ const Dashboard = () => {
     }
   }, []);
 
-  const toggleDarkMode = () => setDarkMode((prev) => !prev);
   const toggleSidebar = () => setIsOpen((prev) => !prev);
 
   return (
-    <div
-      className={`flex font-Montserrat ${
-        darkMode ? "dark bg-slate-900" : "bg-slate-100"
-      }`}
-    >
+  <div className="flex font-Montserrat bg-white">
       <SideBar isOpen={isOpen} toggleSidebar={toggleSidebar} />
-
       <div
-        className={`flex-1 bg-slate-200 ${
+        className={`flex-1 bg-slate-100 ${
           isOpen ? "md:ml-44" : "ml-16"
-        } transition-all duration-300 dark:bg-white`}
+        } transition-all duration-300 `}
       >
-        <Header toggleDarkMode={toggleDarkMode} darkMode={darkMode} />
-        <div className="">
-          <Outlet />
-        </div>
+        <Header />
+        <Outlet />
       </div>
     </div>
   );

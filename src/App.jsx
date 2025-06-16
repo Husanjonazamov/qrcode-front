@@ -16,7 +16,6 @@ function App() {
         <Route path="/" element={<LoginPage />} />
 
         <Route path="/dashboard" element={<Dashboard />}>
-          {/* Asosiy sahifa uchun Cards shu formatda */}
           <Route
             index
             element={

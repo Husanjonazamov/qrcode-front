@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import FileUpload from "./FileUpload";
 
 
-const PdfModel = ({ onClose, isOpen }) => {
+const PdfModel = ({ onClose, isOpen, addPdfItem }) => {
     const [formData, setFormData] = useState({
         name: "",
         year: "",
@@ -33,10 +33,17 @@ const PdfModel = ({ onClose, isOpen }) => {
         };
 
         const existingData = JSON.parse(localStorage.getItem("pdfItems")) || [];
-        localStorage.setItem("pdfItems", JSON.stringify([...existingData, dataToSave]));
+        const updatedData = [...existingData, dataToSave];
+        localStorage.setItem("pdfItems", JSON.stringify(updatedData));
+
+        // 💡 Local statega yangi elementni uzatamiz
+        if (addPdfItem) {
+            addPdfItem(dataToSave);
+        }
 
         onClose(); 
-    }; 
+    };
+ 
 
 
     return (
@@ -64,7 +71,7 @@ const PdfModel = ({ onClose, isOpen }) => {
                     </button>
                 </div>
 
-                <form className="space-y-4 p-4">
+                <form className="space-y-4 p-4" onSubmit={handleSubmit}>
                     <div>
                         <label className="block mb-1 text-sm font-medium text-gray-600">Mashina nomi</label>
                         <input
@@ -115,6 +122,7 @@ const PdfModel = ({ onClose, isOpen }) => {
                             Bekor qilish
                         </button>
                         <button
+
                             type="submit"
                             className="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700"
                         >
