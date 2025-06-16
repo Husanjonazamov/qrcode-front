@@ -5,10 +5,12 @@ export const menuItems = [
     {
         icon: FaHome,
         name: "Home",
+        path: "/dashboard",
     },
     {
         icon: FaFileAlt,
-        name: "Document",
+        name: "PDF qo'shish",
+        path: "/dashboard/pdf",
     }
 ]
 

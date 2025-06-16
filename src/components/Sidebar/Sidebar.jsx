@@ -29,6 +29,7 @@ const SideBar = ({ isOpen, toggleSidebar }) => {
                         key={index}
                         icon={item.icon}
                         name={item.name}
+                        path={item.path}
                         isOpen={isOpen}
                         isLgout={item.isLgout}
                     />
