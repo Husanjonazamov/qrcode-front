@@ -134,17 +134,6 @@ const PdfList = ({ items = [], setItems }) => {
                           <FaDownload className="w-3 h-3" />
                           Download
                         </button>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            alert("✏️ Tahrirlash bosildi")
-                            setOpenMenuIndex(null)
-                          }}
-                          className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-150"
-                        >
-                          <FaEdit className="w-3 h-3" />
-                          Edit
-                        </button>
                        <button
                            onClick={() => {
                             handleDelete(item.id, fetchItems);
@@ -297,17 +286,6 @@ const PdfList = ({ items = [], setItems }) => {
                             >
                               <FaDownload className="w-3 h-3" />
                               Download
-                            </button>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                alert("✏️ Tahrirlash bosildi")
-                                setOpenMenuIndex(null)
-                              }}
-                              className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-150"
-                            >
-                              <FaEdit className="w-3 h-3" />
-                              Edit
                             </button>
                             <button
                               onClick={(e) => {
