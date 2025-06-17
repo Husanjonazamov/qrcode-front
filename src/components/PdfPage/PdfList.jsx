@@ -4,8 +4,9 @@ import { FaDownload, FaTrashAlt, FaEdit, FaFilePdf } from "react-icons/fa"
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa" // Added for pagination arrows
 import axios from "axios"
 import config from "../config"
-import handleDownloadPdf from "../FileDownload/FileDownload"
-
+import handleDownloadPdf from "../Popup/FileDownload"
+import handleDelete from "../Popup/itemedit"
+import fetchItems from "../Popup/fetchItems"
 
 
 const PdfList = ({ items = [], setItems }) => {
@@ -18,47 +19,19 @@ const PdfList = ({ items = [], setItems }) => {
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   
+
   useEffect(() => {
-    const fetchItems = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(`${config.BASE_URL}/api/generate/?page=${page}`);
-        const result = response.data;
+    fetchItems({
+      page,
+      setApiItems,
+      setPaginationLinks,
+      setTotalPages,
+      setCurrentPage,
+      setLoading,
+      setError,
+    });
+  }, [page])
 
-        if (result?.data?.results && Array.isArray(result.data.results)) {
-          const sortedItems = result.data.results.sort(
-            (a, b) => new Date(b.created_at) - new Date(a.created_at)
-          );
-
-          setApiItems(sortedItems);
-          setPaginationLinks(result.data.links || { next: null, previous: null });
-          setTotalPages(result.data.total_pages || 1);
-          setCurrentPage(result.data.current_page || page); 
-        } else {
-          console.error("Unexpected response format:", result);
-          setApiItems([]);
-          setPaginationLinks({ next: null, previous: null });
-        }
-
-        setLoading(false);
-      } catch (err) {
-        setError("Ma'lumotlarni yuklashda xatolik yuz berdi");
-        setLoading(false);
-      }
-    };
-
-    fetchItems();
-  }, [page]);
-
-  
-
-  const handleDelete = (index) => {
-    if (setItems) {
-      const updated = items.filter((_, i) => i !== index);
-      setItems(updated);
-      localStorage.setItem("pdfItems", JSON.stringify(updated));
-    }
-  };
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -124,7 +97,7 @@ const PdfList = ({ items = [], setItems }) => {
         <div className="space-y-4 p-4">
           {apiItems.map((item, index) => (
             
-            <div key={index} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <div key={index} className="bg-gray-50 rounded-lg  p-4 border border-gray-200">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <input
@@ -148,7 +121,7 @@ const PdfList = ({ items = [], setItems }) => {
                     <FiMoreVertical className="w-4 h-4" />
                   </button>
                   {openMenuIndex === index && (
-                    <div className="absolute right-0 top-8 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-20">
+                    <div className="absolute right-0 top-8 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-[9999]">
                       <div className="py-1">
                         <button
                           onClick={(e) => {
@@ -172,17 +145,16 @@ const PdfList = ({ items = [], setItems }) => {
                           <FaEdit className="w-3 h-3" />
                           Edit
                         </button>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            handleDelete(index)
-                            setOpenMenuIndex(null)
+                       <button
+                           onClick={() => {
+                            handleDelete(item.id, fetchItems);
                           }}
-                          className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-100 transition-colors duration-150"
-                        >
-                          <FaTrashAlt className="w-3 h-3" />
-                          Delete
+                            className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-100 transition-colors duration-150"
+                          >
+                            <FaTrashAlt className="w-3 h-3" />
+                            Delete 
                         </button>
+
                       </div>
                     </div>
                   )}
@@ -340,7 +312,7 @@ const PdfList = ({ items = [], setItems }) => {
                             <button
                               onClick={(e) => {
                                 e.stopPropagation()
-                                handleDelete(index)
+                                handleDelete(item.id, fetchItems);
                                 setOpenMenuIndex(null)
                               }}
                               className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-100 transition-colors duration-150"
@@ -375,7 +347,7 @@ const PdfList = ({ items = [], setItems }) => {
           Oldingi
         </button>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 ">
           {Array.from({ length: totalPages }, (_, i) => i + 1)
             .filter((pageNumber) => pageNumber >= page - 3 && pageNumber <= page + 3)
             .map((pageNumber) => (

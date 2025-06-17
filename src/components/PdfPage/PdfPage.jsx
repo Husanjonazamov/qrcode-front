@@ -14,7 +14,7 @@ const PdfPage = () => {
     };
 
     return (
-        <div className="p-6 mt-5 bg-white rounded-xl shadow-lg relative">
+        <div className="p-6 mt-5  bg-white rounded-xl shadow-lg relative">
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 border-b border-gray-300 pb-4">
                 <h2 className="text-xl sm:text-3xl font-extrabold text-slate-800">📄 PDF Fayllar</h2>
                 <button
