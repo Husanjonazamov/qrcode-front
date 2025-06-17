@@ -4,7 +4,7 @@ import { FaDownload, FaTrashAlt, FaEdit, FaFilePdf } from "react-icons/fa"
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa" // Added for pagination arrows
 import axios from "axios"
 import config from "../config"
-
+import handleDownloadPdf from "../FileDownload/FileDownload"
 
 
 
@@ -17,6 +17,7 @@ const PdfList = ({ items = [], setItems }) => {
   const [paginationLinks, setPaginationLinks] = useState({ next: null, previous: null });
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
+  
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -43,23 +44,7 @@ const PdfList = ({ items = [], setItems }) => {
     fetchItems();
   }, [page]);
 
-  const handleDownloadPdf = async (pdfUrl, fileName) => {
-    try {
-      setLoading(true);
-      const response = await axios.get(pdfUrl, { responseType: "blob" });
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", fileName || "document.pdf");
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-    } catch (err) {
-      alert("PDF yuklab olishda xatolik yuz berdi");
-    } finally {
-      setLoading(false);
-    }
-  };
+  
 
   const handleDelete = (index) => {
     if (setItems) {
@@ -132,6 +117,7 @@ const PdfList = ({ items = [], setItems }) => {
       <div className="block md:hidden">
         <div className="space-y-4 p-4">
           {apiItems.map((item, index) => (
+            
             <div key={index} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2">
@@ -161,7 +147,7 @@ const PdfList = ({ items = [], setItems }) => {
                         <button
                           onClick={(e) => {
                             e.stopPropagation()
-                            handleDownloadPdf(item.result_pdf, `document-${item.id}.pdf`)
+                            handleDownloadPdf(item.id, `${item.owner}.pdf`)
                             setOpenMenuIndex(null)
                           }}
                           className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-150"
@@ -220,7 +206,7 @@ const PdfList = ({ items = [], setItems }) => {
                 </div>
                 <div className="pt-2">
                   <button
-                    onClick={() => handleDownloadPdf(item.result_pdf, `document-${item.id}.pdf`)}
+                    onClick={() => handleDownloadPdf(item.id, `${item.owner}.pdf`)}
                     className="w-full bg-teal-700 hover:bg-teal-800 text-white text-xs font-medium px-3 py-2 rounded-md transition-colors duration-150"
                   >
                     Yuklab olish
@@ -305,7 +291,7 @@ const PdfList = ({ items = [], setItems }) => {
                 <td className="py-4 px-6">
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => handleDownloadPdf(item.result_pdf, `document-${item.id}.pdf`)}
+                      onClick={() => handleDownloadPdf(item.id, `${item.owner}.pdf`)}
                       className="bg-teal-700 hover:bg-teal-800 text-white text-xs font-medium px-3 py-1.5 rounded-md transition-colors duration-150"
                     >
                       Yuklab olish
@@ -326,7 +312,7 @@ const PdfList = ({ items = [], setItems }) => {
                             <button
                               onClick={(e) => {
                                 e.stopPropagation()
-                                handleDownloadPdf(item.result_pdf, `document-${item.id}.pdf`)
+                                handleDownloadPdf(item.id, `${item.owner}.pdf`)
                                 setOpenMenuIndex(null)
                               }}
                               className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-150"
