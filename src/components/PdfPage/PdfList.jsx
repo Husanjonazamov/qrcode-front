@@ -4,6 +4,10 @@ import { FaDownload, FaTrashAlt, FaEdit, FaFilePdf } from "react-icons/fa"
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa" // Added for pagination arrows
 import axios from "axios"
 import config from "../config"
+
+
+
+
 const PdfList = ({ items = [], setItems }) => {
   const [openMenuIndex, setOpenMenuIndex] = useState(null);
   const [apiItems, setApiItems] = useState([]);
@@ -41,6 +45,7 @@ const PdfList = ({ items = [], setItems }) => {
 
   const handleDownloadPdf = async (pdfUrl, fileName) => {
     try {
+      setLoading(true);
       const response = await axios.get(pdfUrl, { responseType: "blob" });
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
@@ -51,6 +56,8 @@ const PdfList = ({ items = [], setItems }) => {
       link.remove();
     } catch (err) {
       alert("PDF yuklab olishda xatolik yuz berdi");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -64,11 +71,11 @@ const PdfList = ({ items = [], setItems }) => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case "ON GOING":
+      case "DOWNLOAD":
         return "bg-green-100 text-green-800 border-green-200";
-      case "UP COMING":
+      case "PENDING":
         return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      case "FINISHED":
+      case "ERROR":
         return "bg-gray-100 text-gray-800 border-gray-200";
       case "CANCELLED":
         return "bg-red-100 text-red-800 border-red-200";
