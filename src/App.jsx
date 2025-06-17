@@ -13,7 +13,7 @@ import LoginPage from "./components/Login/Login";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Cards from "./components/Cards/Cards";
 import PdfPage from "./components/PdfPage/PdfPage";
-
+import ViewPdfPage from "./components/ViewPdf/ViewsPdf";
 
 
 
@@ -55,6 +55,8 @@ function App() {
             </RedirectIfAuthenticated>
           }
         />
+
+        <Route path="/view-pdf/:id" element={<ViewPdfPage />} />
 
         <Route path="/dashboard" element={<ProtectedRoute />}>
           <Route element={<Dashboard />}>
