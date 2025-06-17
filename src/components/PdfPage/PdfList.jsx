@@ -7,7 +7,6 @@ import { FaDownload, FaTrashAlt, FaEdit, FaFilePdf } from "react-icons/fa"
 const ItemsPage = ({ items = [], setItems }) => {
   const [openMenuIndex, setOpenMenuIndex] = useState(null)
 
-  // Sample data if no items provided
   const sampleItems = [
     {
       id: "25678",
@@ -22,91 +21,7 @@ const ItemsPage = ({ items = [], setItems }) => {
       time: "10 AM to 2 PM",
       avatar: "/placeholder.svg?height=32&width=32",
       userName: "Abigail Carlos",
-    },
-    {
-      id: "56565",
-      name: "BMW X5",
-      year: "2022",
-      country: "Germany",
-      fileName: "bmw-x5-specs.pdf",
-      status: "UP COMING",
-      paymentStatus: "ONLINE BANKING",
-      attendees: 16,
-      date: "Thursday 15th Sept.",
-      time: "7 PM to 9 PM",
-      avatar: "/placeholder.svg?height=32&width=32",
-      userName: "Olive Yew",
-    },
-    {
-      id: "23568",
-      name: "Honda Civic",
-      year: "2021",
-      country: "Japan",
-      fileName: "honda-civic-guide.pdf",
-      status: "FINISHED",
-      paymentStatus: "CASH",
-      attendees: 8,
-      date: "Wednesday 4th Sept.",
-      time: "3 AM to 1 PM",
-      avatar: "/placeholder.svg?height=32&width=32",
-      userName: "Teri Dactyl",
-    },
-    {
-      id: "45533",
-      name: "Mercedes C-Class",
-      year: "2023",
-      country: "Germany",
-      fileName: "mercedes-c-class.pdf",
-      status: "UP COMING",
-      paymentStatus: "ONLINE BANKING",
-      attendees: 12,
-      date: "Friday 12th Sept.",
-      time: "10 AM to 5:30 PM",
-      avatar: "/placeholder.svg?height=32&width=32",
-      userName: "Aaron Draplin",
-    },
-    {
-      id: "78925",
-      name: "Audi A4",
-      year: "2022",
-      country: "Germany",
-      fileName: "audi-a4-manual.pdf",
-      status: "ON GOING",
-      paymentStatus: "CHEQUE",
-      attendees: 2,
-      date: "Monday 12th Sept.",
-      time: "10 AM to 2 PM",
-      avatar: "/placeholder.svg?height=32&width=32",
-      userName: "Allie Grater",
-    },
-    {
-      id: "99725",
-      name: "Ford Mustang",
-      year: "2023",
-      country: "USA",
-      fileName: "ford-mustang-specs.pdf",
-      status: "CANCELLED",
-      paymentStatus: "NOT PAID",
-      attendees: 7,
-      date: "Tuesday 13th Sept.",
-      time: "1 PM to 3 PM",
-      avatar: "/placeholder.svg?height=32&width=32",
-      userName: "Teri Dactyl",
-    },
-    {
-      id: "88252",
-      name: "Tesla Model 3",
-      year: "2024",
-      country: "USA",
-      fileName: "tesla-model3-manual.pdf",
-      status: "NEW ADDED",
-      paymentStatus: "ONLINE BANKING",
-      attendees: 15,
-      date: "Saturday 15th Sept.",
-      time: "11 AM to 1 PM",
-      avatar: "/placeholder.svg?height=32&width=32",
-      userName: "Allie Grater",
-    },
+    }
   ]
 
   const displayItems = items.length > 0 ? items : sampleItems
@@ -151,7 +66,6 @@ const ItemsPage = ({ items = [], setItems }) => {
     }
   }
 
-  // Close dropdown when clicking outside
   const handleClickOutside = () => {
     setOpenMenuIndex(null)
   }
@@ -168,7 +82,6 @@ const ItemsPage = ({ items = [], setItems }) => {
 
   return (
     <div className="mt-8 bg-white rounded-lg shadow-sm border border-gray-200" onClick={handleClickOutside}>
-      {/* Mobile Card View - Hidden on desktop */}
       <div className="block md:hidden">
         <div className="space-y-4 p-4">
           {displayItems.map((item, index) => (
@@ -286,7 +199,6 @@ const ItemsPage = ({ items = [], setItems }) => {
         </div>
       </div>
 
-      {/* Desktop Table View - Hidden on mobile */}
       <div className="hidden md:block overflow-x-auto">
         <table className="w-full min-w-[1000px]">
           <thead className="bg-gray-50 border-b border-gray-200">
