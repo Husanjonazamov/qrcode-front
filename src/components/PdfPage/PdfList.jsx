@@ -7,6 +7,7 @@ import config from "../config"
 import handleDownloadPdf from "../Popup/FileDownload"
 import handleDelete from "../Popup/itemedit"
 import fetchItems from "../Popup/fetchItems"
+import LoadingOverlay from "../Popup/LoadingOverlay"
 
 
 const PdfList = ({ items = [], setItems }) => {
@@ -18,6 +19,8 @@ const PdfList = ({ items = [], setItems }) => {
   const [paginationLinks, setPaginationLinks] = useState({ next: null, previous: null });
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading] = useState(false);
+
   
 
   useEffect(() => {
@@ -73,7 +76,7 @@ const PdfList = ({ items = [], setItems }) => {
   };
 
   if (loading) {
-    return <div className="mt-8 text-center text-gray-600">Yuklanmoqda...</div>;
+    <LoadingOverlay />
   }
 
   if (error) {
@@ -171,14 +174,17 @@ const PdfList = ({ items = [], setItems }) => {
                     <span className="text-xs font-medium text-gray-900">{item.owner || "Unknown User"}</span>
                   </div>
                 </div>
-                <div className="pt-2">
-                  <button
-                    onClick={() => handleDownloadPdf(item.id, `${item.owner}.pdf`)}
-                    className="w-full bg-teal-700 hover:bg-teal-800 text-white text-xs font-medium px-3 py-2 rounded-md transition-colors duration-150"
-                  >
-                    Yuklab olish
-                  </button>
-                </div>
+                 <>
+                {loading && <LoadingOverlay />}
+                  <div className="pt-2">
+                      <button
+                        onClick={() => handleDownloadPdf(item.id, `${item.owner}.pdf`, setLoading)}
+                        className="w-full bg-teal-700 hover:bg-teal-800 text-white text-xs font-medium px-3 py-2 rounded-md transition-colors duration-150"
+                      >
+                        Yuklab olish
+                      </button>
+                  </div>
+              </>
               </div>
             </div>
           ))}
@@ -257,12 +263,19 @@ const PdfList = ({ items = [], setItems }) => {
                 </td>
                 <td className="py-4 px-6">
                   <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => handleDownloadPdf(item.id, `${item.owner}.pdf`)}
-                      className="bg-teal-700 hover:bg-teal-800 text-white text-xs font-medium px-3 py-1.5 rounded-md transition-colors duration-150"
-                    >
-                      Yuklab olish
-                    </button>
+
+                    <>
+                      {loading && <LoadingOverlay />}
+                      <div className="pt-2">
+                        <button
+                          onClick={() => handleDownloadPdf(item.id, `${item.owner}.pdf`, setLoading)}
+                          className="w-full bg-teal-700 hover:bg-teal-800 text-white text-xs font-medium px-3 py-2 rounded-md transition-colors duration-150"
+                        >
+                          Yuklab olish
+                        </button>
+                      </div>
+                    </>
+
                     <div className="relative">
                       <button
                         onClick={(e) => {
