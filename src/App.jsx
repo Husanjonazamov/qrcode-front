@@ -4,8 +4,6 @@ import {
   Routes,
   Route,
   Navigate,
-  Outlet,
-  useLocation,
 } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
@@ -15,8 +13,7 @@ import Cards from "./components/Cards/Cards";
 import PdfPage from "./components/PdfPage/PdfPage";
 import ViewPdfPage from "./components/ViewPdf/ViewsPdf";
 
-
-
+// 🔒 Token tekshirish
 const isTokenValid = (token) => {
   try {
     const decoded = jwtDecode(token);
@@ -27,19 +24,22 @@ const isTokenValid = (token) => {
   }
 };
 
-function ProtectedRoute() {
+// 🛡️ Faqat login bo‘lsa ochiladigan sahifalar
+function ProtectedRoute({ children }) {
   const token = localStorage.getItem("access");
-  return token && isTokenValid(token) ? <Outlet /> : <Navigate to="/" replace />;
+  if (token && isTokenValid(token)) {
+    return children;
+  } else {
+    return <Navigate to="/" replace />;
+  }
 }
 
+// 🔄 Login redirect
 function RedirectIfAuthenticated({ children }) {
   const token = localStorage.getItem("access");
-  const location = useLocation();
-
   if (token && isTokenValid(token)) {
     return <Navigate to="/dashboard" replace />;
   }
-
   return children;
 }
 
@@ -47,6 +47,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+
+        {/* Login sahifasi */}
         <Route
           path="/"
           element={
@@ -56,23 +58,19 @@ function App() {
           }
         />
 
-        <Route path="/view-pdf/:id" element={<ViewPdfPage />} />
+        <Route path="/qr/show/:id" element={<ViewPdfPage />} />
 
-        <Route path="/dashboard" element={<ProtectedRoute />}>
-          <Route element={<Dashboard />}>
-            <Route
-              index
-              element={
-                <div className="w-full">
-                  <Cards />
-                </div>
-              }
-            />
-            <Route path="pdf" element={<PdfPage />} />
-          </Route>
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Cards />} />
+          <Route path="pdf" element={<PdfPage />} />
         </Route>
-
-        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
   );
