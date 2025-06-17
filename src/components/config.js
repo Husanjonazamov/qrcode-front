@@ -1,5 +1,5 @@
 const config = {
-  BASE_URL: "http://43.245.226.222:8054",
+  BASE_URL: "http://127.0.0.1:8023",
 };
 
 export default config;

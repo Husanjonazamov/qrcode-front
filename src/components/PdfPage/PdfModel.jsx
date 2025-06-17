@@ -1,49 +1,65 @@
 import React, { useState } from "react";
 import FileUpload from "./FileUpload";
+import config from "../config";
 
 
 const PdfModel = ({ onClose, isOpen, addPdfItem }) => {
     const [formData, setFormData] = useState({
-        name: "",
-        year: "",
-        country: "",
+        owner: "",
+        client: "",
+        purpose: "",
+        valuation_amount: "",
         file: null
     });
 
     const handleChange = (e) => {
-        const { name, value} = e.target;
+        const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
-    }
-
-      const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        setFormData({ ...formData, file });
     };
 
     const handleFileSelect = (file) => {
         setFormData((prev) => ({ ...prev, file }));
     };
 
-    const handleSubmit = (e) => {
+    const [loading, setLoading] = useState(false);
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
-        const dataToSave = {
-            ...formData,
-            fileName: formData.file?.name || "",
-        };
+        const apiData = new FormData();
+        apiData.append("owner", formData.owner);
+        apiData.append("client", formData.client);
+        apiData.append("purpose", formData.purpose);
+        apiData.append("valuation_amount", formData.valuation_amount);
+        apiData.append("input_pdf", formData.file);
 
-        const existingData = JSON.parse(localStorage.getItem("pdfItems")) || [];
-        const updatedData = [...existingData, dataToSave];
-        localStorage.setItem("pdfItems", JSON.stringify(updatedData));
+        try {
+            const response = await fetch(`${config.BASE_URL}/api/generate/`, {
+                method: "POST",
+                body: apiData,
+            });
 
-        // 💡 Local statega yangi elementni uzatamiz
-        if (addPdfItem) {
-            addPdfItem(dataToSave);
+            if (response.ok) {
+                const result = await response.json();
+                console.log("Yuborildi:", result);
+
+                if (addPdfItem) {
+                    addPdfItem(result);
+                }
+
+                onClose();
+
+                window.location.reload();
+            } else {
+                console.error("Xatolik:", await response.text());
+            }
+        } catch (error) {
+            console.error("Serverga ulanishda xatolik:", error);
+        } finally {
+            setLoading(false);
         }
-
-        onClose(); 
     };
- 
 
 
     return (
@@ -73,39 +89,56 @@ const PdfModel = ({ onClose, isOpen, addPdfItem }) => {
 
                 <form className="space-y-4 p-4" onSubmit={handleSubmit}>
                     <div>
-                        <label className="block mb-1 text-sm font-medium text-gray-600">Mashina nomi</label>
+                        <label className="block mb-1 text-sm font-medium text-gray-600">
+                            Mulk egasi (Owner ID yoki ism)
+                        </label>
                         <input
                             type="text"
-                            name="name"
-                            value={formData.name}
+                            name="owner"
+                            value={formData.owner}
                             onChange={handleChange}
-                            placeholder="BMW"
                             className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
                             required
                         />
                     </div>
 
                     <div>
-                        <label className="block mb-1 text-sm font-medium text-gray-600">Mashina yili</label>
+                        <label className="block mb-1 text-sm font-medium text-gray-600">
+                            Buyurtmachi (Client ID yoki ism)
+                        </label>
                         <input
                             type="text"
-                            name="year"
-                            value={formData.year}
+                            name="client"
+                            value={formData.client}
                             onChange={handleChange}
-                            placeholder="2025"
                             className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
                             required
                         />
                     </div>
 
                     <div>
-                        <label className="block mb-1 text-sm font-medium text-gray-600">Ishlab chiqarilgan joy</label>
+                        <label className="block mb-1 text-sm font-medium text-gray-600">
+                            Baholash maqsadi
+                        </label>
                         <input
                             type="text"
-                            name="country"
-                            value={formData.country}
+                            name="purpose"
+                            value={formData.purpose}
                             onChange={handleChange}
-                            placeholder="Germany"
+                            className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                            required
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block mb-1 text-sm font-medium text-gray-600">
+                            Baholangan narx (so‘m)
+                        </label>
+                        <input
+                            type="text"
+                            name="valuation_amount"
+                            value={formData.valuation_amount}
+                            onChange={handleChange}
                             className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
                             required
                         />
@@ -121,13 +154,40 @@ const PdfModel = ({ onClose, isOpen, addPdfItem }) => {
                         >
                             Bekor qilish
                         </button>
-                        <button
-
+                       <button
                             type="submit"
-                            className="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700"
+                            className="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 flex items-center gap-2"
+                            disabled={loading}
                         >
-                            Saqlash
+                            {loading ? (
+                                <>
+                                    <svg
+                                        className="animate-spin h-5 w-5 text-white"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <circle
+                                            className="opacity-25"
+                                            cx="12"
+                                            cy="12"
+                                            r="10"
+                                            stroke="currentColor"
+                                            strokeWidth="4"
+                                        />
+                                        <path
+                                            className="opacity-75"
+                                            fill="currentColor"
+                                            d="M4 12a8 8 0 018-8v8z"
+                                        />
+                                    </svg>
+                                    Yuklanyapti...
+                                </>
+                            ) : (
+                                "Saqlash"
+                            )}
                         </button>
+
                     </div>
                 </form>
             </div>
