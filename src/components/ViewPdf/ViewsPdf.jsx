@@ -82,9 +82,9 @@ function ViewPdfPage() {
               </span></p>
               <div className="mt-4">
                 <img
-                  src={data?.qr_code_url || "/order_qr.png"}
+                  src={"/favicon.svg"}
                   alt="ORDER QR CODE IMAGE"
-                  className="w-40 h-40 object-contain"
+                  className="w-20 h-20 object-contain ml-auto mt-10 block"
                 />
               </div>
             </div>
