@@ -42,60 +42,51 @@ function ViewPdfPage() {
   if (error) {
     return <div className="text-red-500 text-center mt-10">{error}</div>;
   }
-
-
+    
   return (
-    <div
-      className=" min-h-screen bg-cover bg-center flex flex-col items-center justify-center px-6 py-10 text-white"
-    >
-      <div className="bg-opacity-60 w-full max-w-5xl rounded-xl p-10 shadow-lg">
-        {/* Header */}
-        <div className="text-center mb-10">
-          <h1 className="text-3xl font-bold text-zinc-800">"Sifat Baxolash" MCHJ</h1>
-          <h2 className="text-xl mt-2 text-teal-700">Xulosa raqami: <span className="text-teal-400">№{data?.number}</span></h2>
-          <p className="mt-1 text-zinc-400">Sanasi: {data?.date || '21.05.2025'}</p>
-
-        </div>
-
-        {/* Body */}
-        <div className="bg-white text-black rounded-lg shadow p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm font-medium">
-            <div className="">
-              <p>MASHINA KATEGORIYASI: {data?.category || "CHEVROLET"}</p>
-              <p>MASHINA MARKASI: {data?.brand || "COBALT"}</p>
-              <p>DAVLAT RAQAMI: {data?.plate_number || "75 G 875 AB"}</p>
-              <p>ISHLAB CHIQARILGAN SANASI: {data?.year || "01.01.2025"}</p>
-              <p>RANGI: {data?.color || "KULRANG SON OF A GUN GRAY"}</p>
-              <p>KUZOV: {data?.vin || "XWBJA69VESA102191"}</p>
-              <p>TPS: {data?.tps_number || "AAG 6232940"}</p>
-              <p>TPS BERILGAN SANASI: {data?.tps_date || "16.05.2025"}</p>
-              <p>TPS KIM TOMONIDAN: {data?.tps_given_by || "TOSHKENT SH."}</p>
-              <p>TURI: {data?.type || "YENGIL SEDAN"}</p>
-            </div>
-
-            <div>
-              <p>MULK EGASI: {data?.owner || "HAMIDOV X. B."}</p>
-              <p>BUYURTMACHI: {data?.client || "HAMIDOV X. B."}</p>
-              <p>BAXOLASH MAQSADI: {data?.purpose || "KREDIT UCHUN"}</p>
-              <p>XULOSA OBYEKTINING BAHOSI: <span className="bg-blue-100 text-teal-800 px-2 py-1 rounded">
-                {parseFloat(data?.valuation_amount || 60106581).toLocaleString("uz-UZ")} so‘m
-              </span></p>
-              <div className="mt-4">
-                <img
-                  src={"/favicon.svg"}
-                  alt="ORDER QR CODE IMAGE"
-                  className="w-20 h-20 object-contain ml-auto mt-10 block"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center px-4 py-10">
+      <div className="text-center mb-10">
+        <h1 className="text-3xl font-bold text-teal-700">"Sifat Baxolash" MCHJ</h1>
+        <h2 className="text-xl mt-2 bg-teal-700 text-white inline-block px-4 py-1 rounded-lg">
+          Sanasi: 21.05.2025
+        </h2>
       </div>
-      <div className="text-slate-500 p-8">
-        2025. Felix-its solution
+
+      <div className="bg-white shadow-xl rounded-xl p-8 w-full max-w-lg">
+        <div className="flex justify-center mb-6">
+          <img src="/favicon.svg" alt="Logo" className="w-15 h-15 object-contain" />
+        </div>
+
+        <ul className="space-y-4 text-sm md:text-base text-gray-800">
+          <li className="flex items-center gap-2">
+            <span className="font-semibold text-sm uppercase">Mulk egasi:</span>
+            <span>{data?.owner || "HAMIDOV X. B."}</span>
+          </li>
+
+          <li className="flex items-center gap-2">
+            <span className="font-semibold text-sm uppercase">Buyurtmachi:</span>
+            <span>{data?.client || "HAMIDOV X. B."}</span>
+          </li>
+
+          <li className="flex items-center gap-2">
+            <span className="font-semibold text-sm uppercase">Baxolash maqsadi:</span>
+            <span>{data?.purpose || "KREDITNI TA'MINLASH"}</span>
+          </li>
+
+          <li className="flex items-center gap-2 flex-wrap">
+            <span className="font-semibold text-sm uppercase">Xulosa obyekti baxolangan narx:</span>
+            <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-sm font-medium">
+              {parseFloat(data?.valuation_amount || 60106581).toLocaleString("uz-UZ")} so‘m
+            </span>
+          </li>
+        </ul>
+      </div>
+
+      <div className="text-center mt-10 text-gray-500">
+        2025. Felix-Its solution
       </div>
     </div>
-  );
+  )
 
 }
 
