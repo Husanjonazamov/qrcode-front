@@ -2,11 +2,15 @@ import React, { useEffect, useState } from "react";
 import CardItem from "../Cards/CardItems";
 import { FaCalendarDay, FaCalendarWeek, FaCalendarAlt, FaLayerGroup } from "react-icons/fa";
 import axios from "axios";
-import config from "../config"
-
+import config from "../config";
 
 const Cards = () => {
-    const [stats, setStats] = useState(null);
+    const [stats, setStats] = useState({
+        daily: 0,
+        weekly: 0,
+        monthly: 0,
+        total: 0,
+    });
 
     useEffect(() => {
         axios.get(`${config.BASE_URL}/api/generate/stats/`)
@@ -18,7 +22,7 @@ const Cards = () => {
             });
     }, []);
 
-    const cardItems = stats ? [
+    const cardItems = [
         {
             title: "Kunlik",
             count: stats.daily,
@@ -39,15 +43,13 @@ const Cards = () => {
             count: stats.total,
             icon: <FaLayerGroup className="text-2xl text-purple-500" />,
         },
-    ] : [];
+    ];
 
     return (
         <div className="mt-5 translate-all flex flex-wrap gap-3 p-4 sm:px-7 inset-shadow-sm duration-300 bg-white">
-            {stats ? cardItems.map((item, index) => (
+            {cardItems.map((item, index) => (
                 <CardItem item={item} key={index} />
-            )) : (
-                <div className="text-gray-600 text-sm">Yuklanmoqda...</div>
-            )}
+            ))}
         </div>
     );
 };
