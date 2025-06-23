@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 
 
 
-const FileUpload = ({ onFileSelect }) => {
+const ReportFileUpload = ({ onFileSelect }) => {
     const fileInputRef = useRef(null);
     const [fileName, setFileName] = useState("");
 
@@ -12,7 +12,7 @@ const FileUpload = ({ onFileSelect }) => {
             setFileName(file.name);
             onFileSelect(file);
         } else {
-            alert("Faqat PDF fayl yuklang!");
+            alert("Iltimos, faqat PDF formatdagi hisobot faylini yuklang.");
             setFileName("");
             onFileSelect(null);
         }
@@ -24,16 +24,20 @@ const FileUpload = ({ onFileSelect }) => {
 
     return (
         <div>
-            <label className="block mb-1 text-sm font-medium text-gray-600">PDF fayl yuklash</label>
+            <label className="block mb-1 text-sm font-medium text-gray-700">
+                Hisobot faylini yuklash
+            </label>
 
             <div
                 onClick={triggerFileInput}
-                className="w-full h-32 border-2 border-dashed border-blue-600 rounded-md flex items-center justify-center cursor-pointer hover:border-teal-500 transition"
+                className="w-full h-32 border-2 border-dashed border-red-600 rounded-md flex items-center justify-center cursor-pointer hover:border-teal-500 transition"
             >
                 {fileName ? (
                     <span className="text-teal-700 font-medium truncate max-w-[90%]">{fileName}</span>
                 ) : (
-                    <span className="text-gray-500">📄 PDF faylni bu yerga yuklang</span>
+                    <span className="text-gray-500">
+                        📄 Bu yerga hisobot faylini yuklang (PDF)
+                    </span>
                 )}
             </div>
 
@@ -48,4 +52,4 @@ const FileUpload = ({ onFileSelect }) => {
     );
 };
 
-export default FileUpload;
+export default ReportFileUpload;

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import FileUpload from "./FileUpload";
+import ReportFileUpload from "./ReportPdf";
 import config from "../config";
-
 
 const PdfModel = ({ onClose, isOpen, addPdfItem }) => {
     const [formData, setFormData] = useState({
@@ -9,16 +9,21 @@ const PdfModel = ({ onClose, isOpen, addPdfItem }) => {
         client: "",
         purpose: "",
         valuation_amount: "",
-        file: null
+        input_pdf: null,
+        report_pdf: null
     });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleFileSelect = (file) => {
-        setFormData((prev) => ({ ...prev, file }));
+    const handleInputPdfSelect = (file) => {
+        setFormData((prev) => ({ ...prev, input_pdf: file }));
+    };
+
+    const handleReportPdfSelect = (file) => {
+        setFormData((prev) => ({ ...prev, report_pdf: file }));
     };
 
     const [loading, setLoading] = useState(false);
@@ -32,7 +37,8 @@ const PdfModel = ({ onClose, isOpen, addPdfItem }) => {
         apiData.append("client", formData.client);
         apiData.append("purpose", formData.purpose);
         apiData.append("valuation_amount", formData.valuation_amount);
-        apiData.append("input_pdf", formData.file);
+        if (formData.input_pdf) apiData.append("input_pdf", formData.input_pdf);
+        if (formData.report_pdf) apiData.append("report_pdf", formData.report_pdf);
 
         try {
             const response = await fetch(`${config.BASE_URL}/api/generate/`, {
@@ -44,12 +50,8 @@ const PdfModel = ({ onClose, isOpen, addPdfItem }) => {
                 const result = await response.json();
                 console.log("Yuborildi:", result);
 
-                if (addPdfItem) {
-                    addPdfItem(result);
-                }
-
+                if (addPdfItem) addPdfItem(result);
                 onClose();
-
                 window.location.reload();
             } else {
                 console.error("Xatolik:", await response.text());
@@ -60,7 +62,6 @@ const PdfModel = ({ onClose, isOpen, addPdfItem }) => {
             setLoading(false);
         }
     };
-
 
     return (
         <>
@@ -88,6 +89,7 @@ const PdfModel = ({ onClose, isOpen, addPdfItem }) => {
                 </div>
 
                 <form className="space-y-4 p-4" onSubmit={handleSubmit}>
+                    {/* Foydalanuvchi inputlari */}
                     <div>
                         <label className="block mb-1 text-sm font-medium text-gray-600">
                             Mulk egasi (Owner ID yoki ism)
@@ -144,8 +146,11 @@ const PdfModel = ({ onClose, isOpen, addPdfItem }) => {
                         />
                     </div>
 
-                    <FileUpload onFileSelect={handleFileSelect} />
+                    {/* Fayl yuklovchilar */}
+                    <FileUpload onFileSelect={handleInputPdfSelect} />
+                    <ReportFileUpload onFileSelect={handleReportPdfSelect} />
 
+                    {/* Tugmalar */}
                     <div className="flex justify-end gap-3 pt-4">
                         <button
                             type="button"
@@ -154,7 +159,7 @@ const PdfModel = ({ onClose, isOpen, addPdfItem }) => {
                         >
                             Bekor qilish
                         </button>
-                       <button
+                        <button
                             type="submit"
                             className="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 flex items-center gap-2"
                             disabled={loading}
@@ -187,7 +192,6 @@ const PdfModel = ({ onClose, isOpen, addPdfItem }) => {
                                 "Saqlash"
                             )}
                         </button>
-
                     </div>
                 </form>
             </div>
